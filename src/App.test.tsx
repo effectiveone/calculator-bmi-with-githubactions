@@ -1,24 +1,21 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 
-describe('Kalkulator BMI', () => {
-  test('renderuje inputy i przycisk', () => {
+describe('BMI Calculator', () => {
+  test('renders inputs and buttons', () => {
     render(<App />);
 
-    expect(screen.getByPlaceholderText('Twoja waga (kg)')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Wzrost (cm)')).toBeInTheDocument();
-    expect(screen.getByText('Oblicz BMI')).toBeInTheDocument();
+    expect(screen.getByLabelText(/weight/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/height/i)).toBeInTheDocument();
+    expect(screen.getByText(/calculate bmi/i)).toBeInTheDocument();
+    expect(screen.getByText(/reset/i)).toBeInTheDocument();
   });
 
-  test('po wpisaniu wartości inputy aktualizują się', () => {
+  test('inputs update correctly after entering values', () => {
     render(<App />);
 
-    const weightInput = screen.getByPlaceholderText(
-      'Twoja waga (kg)',
-    ) as HTMLInputElement;
-    const heightInput = screen.getByPlaceholderText(
-      'Wzrost (cm)',
-    ) as HTMLInputElement;
+    const weightInput = screen.getByLabelText(/weight/i) as HTMLInputElement;
+    const heightInput = screen.getByLabelText(/height/i) as HTMLInputElement;
 
     fireEvent.change(weightInput, { target: { value: '70' } });
     fireEvent.change(heightInput, { target: { value: '175' } });
@@ -27,98 +24,144 @@ describe('Kalkulator BMI', () => {
     expect(heightInput.value).toBe('175');
   });
 
-  test('poprawnie oblicza BMI', () => {
+  test('calculates BMI correctly', () => {
     render(<App />);
 
-    const weightInput = screen.getByPlaceholderText('Twoja waga (kg)');
-    const heightInput = screen.getByPlaceholderText('Wzrost (cm)');
-    const button = screen.getByText('Oblicz BMI');
+    const weightInput = screen.getByLabelText(/weight/i);
+    const heightInput = screen.getByLabelText(/height/i);
+    const calculateButton = screen.getByText(/calculate bmi/i);
 
     fireEvent.change(weightInput, { target: { value: '70' } });
     fireEvent.change(heightInput, { target: { value: '175' } });
-    fireEvent.click(button);
+    fireEvent.click(calculateButton);
 
-    expect(screen.getByText(/Twoje BMI: 22.86/i)).toBeInTheDocument(); // 70 / (1.75 * 1.75) = 22.86
+    expect(screen.getByText('22.86')).toBeInTheDocument(); // 70 / (1.75 * 1.75) = 22.86
+    expect(screen.getByText('Normal weight')).toBeInTheDocument();
   });
 
-  test('nie liczy BMI dla pustych wartości', () => {
+  test('does not calculate BMI for empty values', () => {
     render(<App />);
 
-    const button = screen.getByText('Oblicz BMI');
-    fireEvent.click(button);
+    const calculateButton = screen.getByText(/calculate bmi/i);
+    fireEvent.click(calculateButton);
 
-    expect(screen.queryByText(/Twoje BMI:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/your result/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/please enter valid weight and height values/i),
+    ).toBeInTheDocument();
   });
 
-  test('obsługuje błędne dane (wzrost = 0)', () => {
+  test('handles invalid data (height = 0)', () => {
     render(<App />);
 
-    const weightInput = screen.getByPlaceholderText('Twoja waga (kg)');
-    const heightInput = screen.getByPlaceholderText('Wzrost (cm)');
-    const button = screen.getByText('Oblicz BMI');
+    const weightInput = screen.getByLabelText(/weight/i);
+    const heightInput = screen.getByLabelText(/height/i);
+    const calculateButton = screen.getByText(/calculate bmi/i);
 
     fireEvent.change(weightInput, { target: { value: '70' } });
     fireEvent.change(heightInput, { target: { value: '0' } });
-    fireEvent.click(button);
+    fireEvent.click(calculateButton);
 
-    expect(screen.queryByText(/Twoje BMI:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/your result/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/height must be greater than 0/i),
+    ).toBeInTheDocument();
+  });
+
+  test('resets form correctly', () => {
+    render(<App />);
+
+    const weightInput = screen.getByLabelText(/weight/i) as HTMLInputElement;
+    const heightInput = screen.getByLabelText(/height/i) as HTMLInputElement;
+    const calculateButton = screen.getByText(/calculate bmi/i);
+    const resetButton = screen.getByText(/reset/i);
+
+    // Fill in values and calculate
+    fireEvent.change(weightInput, { target: { value: '70' } });
+    fireEvent.change(heightInput, { target: { value: '175' } });
+    fireEvent.click(calculateButton);
+
+    // Verify calculation happened
+    expect(screen.getByText('22.86')).toBeInTheDocument();
+
+    // Reset form
+    fireEvent.click(resetButton);
+
+    // Verify form is reset
+    expect(weightInput.value).toBe('');
+    expect(heightInput.value).toBe('');
+    expect(screen.queryByText('22.86')).not.toBeInTheDocument();
+  });
+
+  test('shows error for unrealistic weight value', () => {
+    render(<App />);
+
+    const weightInput = screen.getByLabelText(/weight/i);
+    const heightInput = screen.getByLabelText(/height/i);
+    const calculateButton = screen.getByText(/calculate bmi/i);
+
+    fireEvent.change(weightInput, { target: { value: '600' } });
+    fireEvent.change(heightInput, { target: { value: '175' } });
+    fireEvent.click(calculateButton);
+
+    expect(screen.getByText(/weight seems too high/i)).toBeInTheDocument();
   });
 });
 
-describe('Kategoryzacja BMI', () => {
-  test('BMI < 18.5 - Niedowaga', () => {
+describe('BMI Categories', () => {
+  test('BMI < 18.5 - Underweight', () => {
     render(<App />);
 
-    const weightInput = screen.getByPlaceholderText('Twoja waga (kg)');
-    const heightInput = screen.getByPlaceholderText('Wzrost (cm)');
-    const button = screen.getByText('Oblicz BMI');
+    const weightInput = screen.getByLabelText(/weight/i);
+    const heightInput = screen.getByLabelText(/height/i);
+    const calculateButton = screen.getByText(/calculate bmi/i);
 
-    fireEvent.change(weightInput, { target: { value: '50' } }); // Waga 50 kg
-    fireEvent.change(heightInput, { target: { value: '175' } }); // Wzrost 175 cm
-    fireEvent.click(button);
+    fireEvent.change(weightInput, { target: { value: '50' } }); // Weight 50 kg
+    fireEvent.change(heightInput, { target: { value: '175' } }); // Height 175 cm
+    fireEvent.click(calculateButton);
 
-    expect(screen.getByText(/Niedowaga/i)).toBeInTheDocument();
+    expect(screen.getByText('Underweight')).toBeInTheDocument();
   });
 
-  test('BMI 18.5 - 24.9 - Prawidłowa waga', () => {
+  test('BMI 18.5 - 24.9 - Normal weight', () => {
     render(<App />);
 
-    fireEvent.change(screen.getByPlaceholderText('Twoja waga (kg)'), {
+    fireEvent.change(screen.getByLabelText(/weight/i), {
       target: { value: '70' },
     });
-    fireEvent.change(screen.getByPlaceholderText('Wzrost (cm)'), {
+    fireEvent.change(screen.getByLabelText(/height/i), {
       target: { value: '175' },
     });
-    fireEvent.click(screen.getByText('Oblicz BMI'));
+    fireEvent.click(screen.getByText(/calculate bmi/i));
 
-    expect(screen.getByText(/Prawidłowa waga/i)).toBeInTheDocument();
+    expect(screen.getByText('Normal weight')).toBeInTheDocument();
   });
 
-  test('BMI 25 - 29.9 - Nadwaga', () => {
+  test('BMI 25 - 29.9 - Overweight', () => {
     render(<App />);
 
-    fireEvent.change(screen.getByPlaceholderText('Twoja waga (kg)'), {
+    fireEvent.change(screen.getByLabelText(/weight/i), {
       target: { value: '85' },
     });
-    fireEvent.change(screen.getByPlaceholderText('Wzrost (cm)'), {
+    fireEvent.change(screen.getByLabelText(/height/i), {
       target: { value: '175' },
     });
-    fireEvent.click(screen.getByText('Oblicz BMI'));
+    fireEvent.click(screen.getByText(/calculate bmi/i));
 
-    expect(screen.getByText(/Nadwaga/i)).toBeInTheDocument();
+    expect(screen.getByText('Overweight')).toBeInTheDocument();
   });
 
-  test('BMI 30+ - Otyłość', () => {
+  test('BMI 30+ - Obesity', () => {
     render(<App />);
 
-    fireEvent.change(screen.getByPlaceholderText('Twoja waga (kg)'), {
+    fireEvent.change(screen.getByLabelText(/weight/i), {
       target: { value: '100' },
     });
-    fireEvent.change(screen.getByPlaceholderText('Wzrost (cm)'), {
+    fireEvent.change(screen.getByLabelText(/height/i), {
       target: { value: '175' },
     });
-    fireEvent.click(screen.getByText('Oblicz BMI'));
+    fireEvent.click(screen.getByText(/calculate bmi/i));
 
-    expect(screen.getByText(/Otyłość/i)).toBeInTheDocument();
+    expect(screen.getByText('Obesity')).toBeInTheDocument();
   });
 });

@@ -1,38 +1,196 @@
+/* Main App Styles */
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  background-color: #f8f9fa;
+}
+
+/* BMI Calculator Container */
+.bmi-calculator {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  margin: 2rem auto;
+}
+
+/* Headings */
+h1 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+h2 {
+  color: #444;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+/* Input Groups */
+.input-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  flex: 1;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.calculate-button {
+  background-color: #4a90e2;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.calculate-button:hover {
+  background-color: #3a7bc8;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.reset-button {
+  background-color: #f1f2f6;
+  color: #666;
+}
+
+.reset-button:hover {
+  background-color: #e1e4ea;
+}
+
+/* Error Message */
+.error-message {
+  background-color: #ffe0e0;
+  color: #d93025;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+/* Results */
+.result-container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.bmi-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: white;
+}
+
+.bmi-value {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.bmi-category {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/* BMI Category Colors */
+.underweight {
+  background-color: #4fc3f7;
+}
+
+.normal-weight {
+  background-color: #66bb6a;
+}
+
+.overweight {
+  background-color: #ffa726;
+}
+
+.obesity {
+  background-color: #ef5350;
+}
+
+/* BMI Info */
+.bmi-info {
+  text-align: left;
+}
+
+.bmi-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bmi-info li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  color: #666;
+}
+
+.bmi-info li.active {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .bmi-calculator {
+    padding: 1.5rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .button-group {
+    flex-direction: column;
   }
 }

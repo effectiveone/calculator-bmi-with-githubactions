@@ -1,47 +1,94 @@
-# Getting Started with Create React App
+# BMI Calculator with Unit Testing Tutorial
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![React BMI Calculator - Test & Build](https://github.com/yourusername/bmi-calculator/actions/workflows/test-and-build.yml/badge.svg)](https://github.com/yourusername/bmi-calculator/actions/workflows/test-and-build.yml)
 
-## Available Scripts
+This repository serves as a tutorial on how to implement effective unit testing in React applications. We use a BMI (Body Mass Index) calculator as our example application to demonstrate how proper testing can ensure application quality and prevent unexpected code changes.
 
-In the project directory, you can run:
+## 🔍 Project Overview
 
-### `npm start`
+The BMI Calculator is a simple React application that:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Takes user's weight (in kg) and height (in cm) as input
+- Calculates the BMI using the formula: weight / (height in meters)²
+- Categorizes the result according to international standards:
+  - Underweight: < 18.5
+  - Normal weight: 18.5 - 24.9
+  - Overweight: 25 - 29.9
+  - Obesity: ≥ 30
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🧪 Testing Approach
 
-### `npm test`
+This project demonstrates:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Comprehensive Unit Testing**: Testing both the UI elements and the business logic.
+2. **Test-Driven Development (TDD)**: Tests were written before implementing features.
+3. **CI/CD Integration**: Tests automatically run on GitHub Actions on every code push and pull request.
 
-### `npm run build`
+### Key Testing Concepts Demonstrated
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Component rendering testing
+- User interaction simulation
+- State management testing
+- Input validation
+- Business logic verification
+- Edge case handling
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🚀 How CI/CD Enforces Code Quality
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The GitHub Actions workflow (`test-and-build.yml`) ensures:
 
-### `npm run eject`
+1. All tests pass before the build process begins
+2. Failed tests will block the build, preventing the deployment of broken code
+3. Pull requests cannot be merged if tests fail
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This demonstrates how automated testing can protect your application from regressions and enforce code quality standards across your team.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📋 Testing Guidelines
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The project follows these testing best practices:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+1. **Isolation**: Each test covers a specific piece of functionality
+2. **Readability**: Tests are clearly named and structured
+3. **Maintainability**: Tests are independent and don't rely on specific implementation details
+4. **Coverage**: All critical application paths are tested
 
-## Learn More
+## 🛠️ Technical Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- React 19 with TypeScript
+- Jest for test running
+- React Testing Library for component testing
+- GitHub Actions for CI/CD
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-# calculator-bmi-with-githubactions
+## 🏁 Getting Started
+
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Run the tests:
+   ```
+   npm test
+   ```
+4. Start the application:
+   ```
+   npm start
+   ```
+
+## 🧩 Project Structure
+
+- `src/App.tsx` - Main application component
+- `src/App.test.tsx` - Comprehensive tests for the application
+- `src/App.css` - Styling for the application
+- `.github/workflow/test-and-build.yml` - CI/CD configuration
+
+## 💡 Key Learning Points
+
+1. How to structure effective unit tests for React applications
+2. How to use testing to drive development and improve code quality
+3. How CI/CD can enforce testing and prevent broken code from being deployed
+4. The importance of test coverage in critical application paths
+
+## 📝 License
+
+MIT
